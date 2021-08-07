@@ -1,0 +1,43 @@
+version: '3'
+services:
+  selenoid:
+    image: "aerokube/selenoid"
+    container_name: selenoid
+    network_mode: bridge
+    ports:
+      - "4444:4444"
+    volumes:
+      - "$PWD/selenoid/config:/etc/selenoid/" # assumed current dir contains browsers.json
+      - "/var/run/docker.sock:/var/run/docker.sock"
+      - "$PWD/selenoid/video:/opt/selenoid/video"
+      - "$PWD/selenoid/logs:/opt/selenoid/logs"
+    environment:
+      - OVERRIDE_VIDEO_OUTPUT_DIR=$PWD/selenoid/video
+    command: ["-conf", "/etc/selenoid/browsers.json", "-video-output-dir", "/opt/selenoid/video", "-log-output-dir", "/opt/selenoid/logs"]
+  ngrok:
+    image: shkoliar/ngrok:latest
+    container_name: ngrok
+    network_mode: bridge
+    ports:
+      - 4551:4551
+    links:
+      - jenkins
+    environment:
+      - DOMAIN=jenkins
+      - PORT=8083
+  jenkins:
+    image: jenkins/jenkins:2.289.3-lts-jdk11
+    container_name: jenkins
+    network_mode: bridge
+    user: root
+    ports:
+      - "8083:8080"
+      - "50003:50000"
+    volumes:
+      - "/var/run/docker.sock:/var/run/docker.sock"
+    volumes_from:
+      - jenkins-data
+  jenkins-data:
+    image: liberstein1/jenkinsdata:1.0
+    container_name: jenkins-data
+    network_mode: bridge

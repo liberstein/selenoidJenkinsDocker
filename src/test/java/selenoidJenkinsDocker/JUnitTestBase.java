@@ -35,7 +35,7 @@ public class JUnitTestBase {
         String slenoidURL = "http://selenoid:4444/wd/hub"; //172.19.0.2 -Selenoid Docker container IP address.
         DesiredCapabilities caps = new DesiredCapabilities();
         caps.setBrowserName(System.getProperty("browser_name", "chrome"));
-        caps.setVersion(System.getProperty("browser_version", "92.0"));
+        caps.setVersion(System.getProperty("browser_version", "86.0"));
         caps.setCapability("enableVNC", true);
         caps.setCapability("screenResolution", "1280x1024");
         caps.setCapability("enableVideo", true);

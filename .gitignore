@@ -8,3 +8,5 @@ bin
 .settings
 *.iws
 *.ipr
+infra/selenoid/logs
+infra/selenoid/video

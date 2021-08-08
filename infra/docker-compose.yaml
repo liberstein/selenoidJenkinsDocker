@@ -24,7 +24,7 @@ services:
       - jenkins
     environment:
       - DOMAIN=jenkins
-      - PORT=8083
+      - PORT=8080
   jenkins:
     image: jenkins/jenkins:2.289.3-lts-jdk11
     container_name: jenkins

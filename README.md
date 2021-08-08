@@ -1,11 +1,11 @@
 #### [Lesson from Java QA Engineer (by OTUS)][link]:
 #### Запуск окружения:
 ```bash
-cd infra && ./start.sh
+cd infra && sudo ./start.sh && cd ..
 ```
-###### В результате запуска поднимутся сервисы:
+###### В результате запуска поднимутся докер контейнеры:
 - ngrok на порту 4551
-- jenkins на порту 8083 -> Мануалы [1][Jenkins-docker-compose] и [2][jenkinsTutorial]
+- настроенный jenkins на порту 8083 -> Мануалы [1][Jenkins-docker-compose] и [2][jenkinsTutorial]
 - selenoid(HUB) на порту 4444
 - selenoid-ui на порту 8080
 
@@ -15,21 +15,24 @@ cd infra && ./start.sh
 - MAVEN 3.6.0
 - OpenJDK 1.8.0_292 (JAVA_HOME=/usr/lib/jvm/java-8-openjdk-amd64/jre)
 - Allure 2.13.2
+- Bash version 4.4.20(1)-release (x86_64-pc-linux-gnu)
 - Docker version 20.10.7, build f0df350 
 - Docker-compose version 1.27.4, build 40524192 (на младших версиях синтаксис может не отработать)
 
 ###### Удаленный запуск тестов:
-- Перейти на страницу http://0.0.0.0:4551/inspect/http для получения WebHook от ngrok (лучше убить ngrok в докере и раскатать локально, т.к. могут возникнуть проблемы с пробросом)
-- Установить этот хук в GitHub и в Jenkins по адресу http://0.0.0.0:8083/ (логинимся как test/test)
+- Установить вебхук в GitHub и в Jenkins по адресу http://0.0.0.0:8083/ (логинимся как test/test)
 - Идём в джобу = WebHok Pipeline и запускаем тест, под хромом 86.0
 
 ###### Локальный запуск тестов:
 Настройки:
 ```bash
 source ~/.profile
-SELENOID_IP=`docker inspect selenoid -f {{.NetworkSettings.IPAddress}}`
-sudo echo "$SELENOID_IP      selenoid" >> /etc/hosts # иначе localhost не разрезолвит имя=selenoid
-cat /etc/hosts   # убеждаемся что хост selenoid резолвится и доступен
+cat /etc/hosts   # убеждаемся что хосты selenoid и jenkins резолвятся и доступны
+```
+Валидация Jenkinsfile:
+```bash
+curl --user test:test -X POST -F "jenkinsfile=<Jenkinsfile" http://jenkins:8080/pipeline-model-converter/validate
+curl --user test:test -X POST -F "jenkinsfile=<Jenkinsfile" http://0.0.0.0:8083/pipeline-model-converter/validate
 ```
 запуск после настроек:
 ```bash

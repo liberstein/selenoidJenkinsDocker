@@ -11,6 +11,7 @@ pipeline {
     parameters {
         string(name: 'GIT_URL', defaultValue: 'https://github.com/liberstein/selenoidJenkinsDocker.git', description: 'The target git url')
         string(name: 'GIT_BRANCH', defaultValue: 'master', description: 'The target git branch')
+        string(name: 'EMAIL_RECIPIENT', defaultValue: 'libersteon@gmail.com', description: 'Default recipient')
         choice(name: 'BROWSER_NAME', choices: ['chrome', 'firefox'], description: 'Pick the target browser in Selenoid')
         choice(name: 'BROWSER_VERSION', choices: ['92.0', '86.0', '85.0'], description: 'Pick the target browser version in Selenoid')
     }
@@ -37,9 +38,7 @@ pipeline {
             post {
                 always {
                     script {
-                        step([$class: 'Mailer', notifyEveryUnstableBuild: true, recipients: "liberstein@gmail.com", sendToIndividuals: true])
-
-                        def helper = load 'infra/main.groovy'
+                        step([$class: 'Mailer', notifyEveryUnstableBuild: true, recipients: "${params.EMAIL_RECIPIENT}", sendToIndividuals: true])
 
                         // Формирование отчета
                         allure([
@@ -60,10 +59,16 @@ pipeline {
                         println("summary generated")
 
                         // Текст оповещения
-                        def message = "${currentBuild.currentResult}: Job ${env.JOB_NAME}, build ${env.BUILD_NUMBER}, branch ${branch}\nTest Summary - ${summary.totalCount}, Failures: ${summary.failCount}, Skipped: ${summary.skipCount}, Passed: ${summary.passCount}\nMore info at: ${env.BUILD_URL}"
+                        def message = "${currentBuild.currentResult}: Job ${env.JOB_NAME}, build ${env.BUILD_NUMBER}, branch ${branch}\nTest Summary - ${summary.totalCount}, Failures: ${summary.failCount}, Skipped: ${summary.skipCount}, Passed: ${summary.passCount}\nMore info at: ${env.BUILD_URL}\nElapsed: ${currentBuild.durationString}"
                         println("message= " + message)
                         slackSend color: 'good', message: message
-                        helper.emailNotification()
+
+                        emailext body: '''${SCRIPT, template="groovy-html.template"}''',
+                                mimeType: 'text/html',
+                                subject: "[Jenkins] ${currentBuild.fullDisplayName}",
+                                to: "${params.EMAIL_RECIPIENT}",
+                                replyTo: "${params.EMAIL_RECIPIENT}",
+                                recipientProviders: [[$class: 'CulpritsRecipientProvider']]
                     }
                 }
             }

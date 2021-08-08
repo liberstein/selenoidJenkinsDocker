@@ -14,7 +14,7 @@ cd infra && ./start.sh
 - IDEA 2021.2 RC
 - MAVEN 3.6.0
 - OpenJDK 1.8.0_292 (JAVA_HOME=/usr/lib/jvm/java-8-openjdk-amd64/jre)
-- Allure 2.14.0
+- Allure 2.13.2
 - Docker version 20.10.7, build f0df350 
 - Docker-compose version 1.27.4, build 40524192 (на младших версиях синтаксис может не отработать)
 
@@ -28,12 +28,12 @@ cd infra && ./start.sh
 ```bash
 source ~/.profile
 SELENOID_IP=`docker inspect selenoid -f {{.NetworkSettings.IPAddress}}`
-sudo echo "$SELENOID_IP      selenoid" >> /etc/hosts // иначе локалхост не разрезолвит имя selenoid
-cat /etc/hosts   // убеждаемся что хост selenoid резолвится и доступен
+sudo echo "$SELENOID_IP      selenoid" >> /etc/hosts # иначе localhost не разрезолвит имя=selenoid
+cat /etc/hosts   # убеждаемся что хост selenoid резолвится и доступен
 ```
 запуск после настроек:
 ```bash
-mvn clean test //важно соответствие модели в файле infra/selenoid/config/browsers.json
+mvn clean test # важно соответствие модели в файле infra/selenoid/config/browsers.json
 mvn clean test -Dbrowser_name=chrome -Dbrowser_version=86.0
 ```
 
@@ -51,12 +51,8 @@ allure generate target/allure-results/ --clean -o allure-report && allure open
 2) Собрать проект
 3) Выполнить все тесты
 4) Прислать письмо вам на почту со значениями:
-- номер сборки
-- статус сборки 
-- ветка репозитория, из которой был взят код тестов 
-- количество тестов (всего/успешных/проваленных/пропущенных) 
-- общее время выполнения job'ы
-5) Job'а доллжна запускаться после каждого git push'а в ваш репозиторий (использовать webhooks) и каждую ночь в 01:00. 
+- номер сборки, статус сборки, ветка репозитория, количество тестов (всего/успешных/проваленных/пропущенных), общее время выполнения job'ы
+5) Job'а должна запускаться после каждого git push'а в ваш репозиторий (использовать webhooks) и каждую ночь в 01:00. 
 6) Помимо отчетности по e-mail, отчет должен приходить в канал в slack 
 7) Отчеты должны добавляться в систему отчетов (на ваш выбор allure, report portal и подобные) 
 8) По окончанию выполнения job, должен выполняться back-up самой job'ы и настроек (можно использовать SCM Sync configuration plugin)

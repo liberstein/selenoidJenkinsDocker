@@ -10,3 +10,4 @@ bin
 *.ipr
 infra/selenoid/logs
 infra/selenoid/video
+infra/jenkins_data

@@ -1,6 +1,6 @@
-package apiHelperExample;
+package selenoidJenkinsDocker;
 
-import apiHelperExample.pages.HomePage;
+import selenoidJenkinsDocker.pages.HomePage;
 import io.qameta.allure.Description;
 import io.qameta.allure.Epic;
 import io.qameta.allure.Feature;

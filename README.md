@@ -36,7 +36,7 @@ curl --user test:test -X POST -F "jenkinsfile=<Jenkinsfile" http://0.0.0.0:8083/
 ```
 запуск после настроек:
 ```bash
-mvn clean test # важно соответствие модели в файле infra/selenoid/config/browsers.json
+mvn clean test # важно соответствие модели в файле infra/selenoid/config/browsers.json + присутствие контейнера браузера!
 mvn clean test -Dbrowser_name=chrome -Dbrowser_version=86.0
 ```
 

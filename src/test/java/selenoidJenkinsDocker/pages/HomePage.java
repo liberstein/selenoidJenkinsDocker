@@ -1,4 +1,4 @@
-package apiHelperExample.pages;
+package selenoidJenkinsDocker.pages;
 
 
 import io.qameta.allure.Allure;

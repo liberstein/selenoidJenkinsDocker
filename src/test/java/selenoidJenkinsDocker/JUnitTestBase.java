@@ -1,4 +1,4 @@
-package apiHelperExample;
+package selenoidJenkinsDocker;
 
 
 import io.restassured.RestAssured;

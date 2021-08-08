@@ -38,6 +38,6 @@ services:
     volumes_from:
       - jenkins-data
   jenkins-data:
-    image: liberstein1/jenkinsdata:1.0
+    image: liberstein1/jenkinsdata:1.1
     container_name: jenkins-data
     network_mode: bridge
